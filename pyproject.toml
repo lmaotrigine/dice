@@ -1,0 +1,148 @@
+[tool.pyright]
+include = ["dice"]
+exclude = [
+    "**/__pycache__",
+    "build",
+    "dist",
+    "docs",
+]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+pythonPlatform = "All"
+reportPropertyTypeMismatch = "error"
+reportShadowedImports = "error"
+reportUninitializedInstanceVariable = "error"
+reportUnnecessaryTypeIgnoreComment = "warning"
+reportImportCycles = "none"  # TODO: find a reliable way to test this
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+preview = true
+
+[tool.ruff.format]
+line-ending = "lf"
+quote-style = "single"
+
+[tool.ruff.lint]
+select = [
+    "A", "ANN", "ASYNC", "B", "BLE", "C4", "COM", "DTZ", "E", "EM", "ERA", "F",
+    "FA", "FBT", "FURB", "G", "I", "ICN", "INP", "ISC", "LOG", "NPY", "PD",
+    "PERF", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PTH", "PYI", "Q", "Q003",
+    "RET", "RSE", "RUF", "S", "SIM", "SLOT", "T20", "TC", "TID", "TRY", "UP",
+    "W", "YTT",
+]
+ignore = [
+    "ANN202", # implied return is fine in some cases
+    "ANN401", # Any is actually correct sometimes
+    "ASYNC116", # long sleeps are fine
+    "B901", # I know how generators as coroutines work
+    "C90", # complexity nonsense
+    "COM812", # ruff format suggested
+    "E501", # ruff format suggested
+    "FBT003", # wrong end to enforce
+    "G002", # false positive with %-logging
+    "ISC001", # ruff format suggested
+    "PLC0415", # sometimes imports need to *not* be at the top
+    "PLR0912", # too many branches
+    "PLR0913", # too many arguments
+    "PLR0915", # too many statements
+    "PLR0917", # too many positional arguments
+    "PLR2004", # magic value comparison
+    "RUF001", # ambiguous characters are fine
+    "S101", # assert for typing memes
+    "S311", # no cryptographic use of PRNG here.
+    "SIM105", # contextlib.suppress is wasteful
+    "TC001", # don't like if TYPE_CHECKING
+    "TC002", # don't like if TYPE_CHECKING
+    "TC003", # don't like if TYPE_CHECKING
+    "UP007", # | for Union doesn't understand TypeVarTuple
+    "UP038", # isinstance on Union types has perf implications
+]
+unfixable = [
+    "E501", # ruff format handles line length differently
+    "ERA", # too many false positives, I'll do this myself
+]
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[project]
+name = "lmaotrigine-dice"
+readme = { file = "README.rst", content-type = "text/x-rst" }
+requires-python = ">=3.12"
+dependencies = [
+    "lark>=1.2.2",
+]
+dynamic = ["version"]
+authors = [
+    {name = "isis", email = "hi@5ht2.me"},
+]
+license = {text = "BSD-3-Clause"}
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+    "Development Status :: 3 - Alpha",
+    "Topic :: Games/Entertainment :: Board Games",
+    "Topic :: Games/Entertainment :: Role-Playing",
+]
+
+[project.urls]
+Homepage = "https://github.com/lmaotrigine/dice"
+"Issue Tracker" = "https://github.com/lmaotrigine/dice/issues"
+"Source Code" = "https://github.com/lmaotrigine/dice"
+
+[project.optional-dependencies]
+pcg = [
+    "numpy>=1.21",
+]
+test = [
+    "coverage[toml]>=7.6.12",
+    "hypothesis>=6.125.3",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+]
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "call"
+getter = "__build_time_version:get_version"
+
+[tool.pdm.build]
+includes = ["dice"]
+excludes = ["__build_time_version.py", "_misc"]
+source-includes = ["__build_time_version.py"]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[dependency-groups]
+dev = [
+    "ipython>=8.32.0",
+    "pydot>=3.0.4",
+    "ruff>=0.9.6",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "if self\\.debug",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if 0:",
+  "if __name__ == .__main__.:",
+]
+
+[tool.coverage.run]
+omit = ["dice/__main__.py"]

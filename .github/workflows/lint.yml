@@ -1,0 +1,56 @@
+name: Type Coverage and Linting
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+  push:
+    branches:
+      - mistress
+  pull_request:
+    branches:
+      - mistress
+    types: [opened, reopened, synchronize]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.12', '3.13', '3.14-dev' ]
+    name: Type Coverage and Linting @ ${{ matrix.python-version }}
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up PDM @ ${{ matrix.python-version }}
+        uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: true
+          allow-python-prereleases: true
+      - name: Install dependencies @ ${{ matrix.python-version }}
+        run: |
+          pdm install -Gpcg --check --no-editable
+      - name: Activate venv @ ${{ matrix.python-version }}
+        run: |
+          echo "$(pdm info --where)/.venv/bin" >> $GITHUB_PATH
+      - name: "Run Pyright @ ${{ matrix.python-version }}"
+        uses: jakebailey/pyright-action@v2
+        with:
+          warnings: false
+          version: 1.1.394
+      - name: Lint
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: check .
+          version: latest
+      - name: Check formatting
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: format --check
+          version: latest
+      - name: Ensure annotations valid at runtime
+        run: python _misc/ensure_annotations.py

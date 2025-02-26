@@ -1,0 +1,40 @@
+name: test
+
+on:
+  push:
+    branches:
+      - mistress
+  pull_request:
+    branches:
+      - mistress
+    types: [opened, reopened, synchronize]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.12', '3.13', '3.14-dev' ]
+    name: Test @ ${{ matrix.python-version }}
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up PDM @ ${{ matrix.python-version }}
+        uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: true
+          allow-python-prereleases: true
+      - name: Install dependencies @ ${{ matrix.python-version }}
+        run: |
+          pdm install -Gpcg,test --check --no-editable
+      - name: Activate venv @ ${{ matrix.python-version }}
+        run: |
+          echo "$(pdm info --where)/.venv/bin" >> $GITHUB_PATH
+      - name: Run tests
+        # NOTE: hypothesis is disabled because it times out in CI
+        run: |
+          pytest --cov=dice --cov-report=term-missing:skip-covered --cov-report=xml -k 'not test_hypothesis'

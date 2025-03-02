@@ -41,7 +41,6 @@ jobs:
         uses: jakebailey/pyright-action@v2
         with:
           warnings: false
-          version: 1.1.394
       - name: Lint
         uses: astral-sh/ruff-action@v3
         with:

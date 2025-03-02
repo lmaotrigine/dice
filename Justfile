@@ -21,3 +21,6 @@ _test fast="":
 
 fasttest: (_test "fast")
 test: _test
+
+ws:
+  ! rg '\r'

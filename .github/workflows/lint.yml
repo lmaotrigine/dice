@@ -33,7 +33,7 @@ jobs:
           allow-python-prereleases: true
       - name: Install dependencies @ ${{ matrix.python-version }}
         run: |
-          pdm install -Gpcg --check --no-editable
+          pdm install -Gpcg --without dev --check --no-editable
       - name: Activate venv @ ${{ matrix.python-version }}
         run: |
           echo "$(pdm info --where)/.venv/bin" >> $GITHUB_PATH

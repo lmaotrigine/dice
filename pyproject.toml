@@ -128,7 +128,7 @@ build-backend = "pdm.backend"
 
 [dependency-groups]
 dev = [
-    "ipython>=8.32.0",
+    "ipython>=9.0.2",
     "pydot>=3.0.4",
     "ruff>=0.9.6",
 ]
@@ -142,6 +142,7 @@ exclude_lines = [
   "raise NotImplementedError",
   "if 0:",
   "if __name__ == .__main__.:",
+  "except ImportError",
 ]
 
 [tool.coverage.run]

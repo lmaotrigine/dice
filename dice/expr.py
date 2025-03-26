@@ -466,8 +466,9 @@ class SetOp:
             self.ops[self.op](target)
 
     def keep(self, target: Number[t.Any]) -> None:
+        to_keep = self.select(target)
         for v in target.kept_set:
-            if v not in self.select(target):
+            if v not in to_keep:
                 v.drop()
 
     def drop(self, target: Number[t.Any]) -> None:

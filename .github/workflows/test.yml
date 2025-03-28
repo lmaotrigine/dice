@@ -15,7 +15,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.12', '3.13', '3.14-dev' ]
+        python-version:
+          - '3.12'
+          - '3.13'
+          # httpcore doesn't work with the latest alpha because of weird
+          # monkeypatching that they do.
+          # therefore pdm is broken.
+          #- '3.14-dev'
     name: Test @ ${{ matrix.python-version }}
     steps:
       - name: "Checkout Repository"

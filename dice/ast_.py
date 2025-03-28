@@ -30,6 +30,7 @@ from __future__ import annotations
 import pathlib
 import typing as t
 from collections.abc import Sequence
+from functools import cache
 
 import lark
 
@@ -405,11 +406,15 @@ class RollTransformer(lark.Transformer[lark.Token, Expression]):
         return self._comma
 
 
+@cache
+def grammar() -> str:
+    return pathlib.Path(__file__).parent.joinpath('dice.lark').read_text('utf-8')
+
+
 class Parser:
     def __init__(self) -> None:
-        grammar = pathlib.Path(__file__).parent.joinpath('dice.lark').read_text('utf-8')
         self._parser = lark.Lark(
-            grammar=grammar,
+            grammar=grammar(),
             start=['expr', 'commented_expr'],
             parser='lalr',
             maybe_placeholders=True,

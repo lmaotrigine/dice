@@ -94,6 +94,9 @@ classifiers = [
     "Topic :: Games/Entertainment :: Role-Playing",
 ]
 
+[project.scripts]
+dice = "dice.__main__:main"
+
 [project.urls]
 Homepage = "https://github.com/lmaotrigine/dice"
 "Issue Tracker" = "https://github.com/lmaotrigine/dice/issues"

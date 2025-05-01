@@ -17,11 +17,11 @@ def get_version() -> str:
         try:
             import subprocess  # noqa: S404
 
-            p = subprocess.Popen(['git', 'rev-list', '--count', 'HEAD'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)  # noqa: S603, S607
+            p = subprocess.Popen(['git', 'rev-list', '--count', 'HEAD'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)  # noqa: S607
             out, _ = p.communicate()
             if out:
                 version += out.decode('utf-8').strip()
-            p = subprocess.Popen(  # noqa: S603
+            p = subprocess.Popen(
                 ['git', 'rev-parse', '--short', 'HEAD'],  # noqa: S607
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,

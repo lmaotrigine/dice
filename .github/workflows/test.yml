@@ -31,7 +31,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: true
           allow-python-prereleases: true
-          version: head
       - name: Install dependencies @ ${{ matrix.python-version }}
         run: |
           pdm install -Gpcg,test --without dev --check --no-editable
